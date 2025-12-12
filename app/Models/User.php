@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use App\Models\UserBalance;
+use App\Models\Topup;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
@@ -73,5 +75,20 @@ class User extends Authenticatable
     public function buyer()
     {
         return $this->hasOne(Buyer::class);
+    }
+
+    public function userBalance()
+    {
+        return $this->hasOne(UserBalance::class);
+    }
+
+    public function topups()
+    {
+        return $this->hasMany(Topup::class);
+    }
+
+    public function getBalanceAttribute()
+    {
+        return $this->userBalance ? $this->userBalance->balance : 0;
     }
 }
