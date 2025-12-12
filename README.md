@@ -1,132 +1,142 @@
-# **Ujian Praktikum Pemrograman Web Aplikasi E-Commerce (Laravel)** 
+# Pusat Kostum - Marketplace Kostum & Cosplay
 
-## **Konteks Proyek**
-
-Kalian diberikan sebuah repositori proyek Laravel 12 yang sudah dilengkapi dengan:
-
-1. Starter Kit **Laravel Breeze** untuk basic autentikasi.  
-2. Semua file **Migrations** yang diperlukan untuk membuat struktur database e-commerce (tabel users, products, transactions, stores, etc.).
-
-**Tugas utama Kalian** adalah membangun web aplikasi full-stack E-Commerce yang fungsional (CRUD) berdasarkan skema database yang disediakan, dengan implementasi khusus pada Role Based Access Control (RBAC) dan Flow Pembayaran.
-
-## **Struktur Database**
-
-![alt text](arsitektur-database.png)
-
-## **Persyaratan Teknis & Setup Awal**
-
-1. **Framework:** Laravel 12\.  
-2. Jalankan **`composer install`** untuk menginstal seluruh dependensi PHP yang dibutuhkan.  
-3. Salin file **`.env.example`** menjadi **`.env`**, lalu edit pengaturan database sesuai server database Kalian  
-4. Jalankan **`php artisan key:generate`** untuk menghasilkan application key baru  
-5. **Database:** Terapkan semua *file* *migration* yang telah disediakan (**`php artisan migrate`**).  
-6. **Seeder:** Kalian **wajib** membuat *Database Seeder* untuk membuat data awal. Silahkan lakukan langkah ini pada folder `database/seeders` dan buat file seeder sesuai tabel dengan data yang diperlukan, minimal:  
-   * Satu pengguna dengan role: 'admin'.  
-   * Dua pengguna dengan role: 'member'.  
-   * Satu Toko (stores) yang dimiliki oleh salah satu member.  
-   * Lima Kategori Produk (product\_categories).  
-   * Sepuluh Produk (products) yang dijual oleh Toko tersebut.  
-7. Jalankan **`php artisan serve`** untuk menjalankan development server  
-8. Buka terminal lain dan jalankan **`npm install && npm run build`** untuk menginstal package Node yang diperlukan.  
-9. Jalankan **`npm run dev`** untuk meng-compile asset dalam mode development  
-10. Buka browser dan akses [**http://localhost:**](http://localhost:8000)`{PORT}` untuk melihat aplikasi
-
-## **Tantangan Khusus (*Challenge*)**
-
-Implementasi Kalian harus mencakup tiga tantangan inti berikut:
-
-### **1\. Role Based Access Control (RBAC)**
-
-Batasi akses ke halaman tertentu berdasarkan peran pengguna.
-
-| Peran (users.role) | Akses ke Halaman | Aturan Akses |
-| :---- | :---- | :---- |
-| **Admin** | Halaman Admin. | Akses penuh ke menu admin. |
-| **Seller/Penjual** | Dasbor Penjual. | Wajib memiliki role: 'member' **DAN** wajib memiliki entri di tabel stores. |
-| **Member/Customer** | Halaman Pelanggan. | Akses ke halaman pembelian dan riwayat. |
-
-### 
-
-### **2\. Implementasi Sistem Keuangan (User Wallet & VA)**
-
-Kalian harus membuat **Tabel Baru** bernama **user\_balances** (untuk *user wallet*/saldo) dan mengimplementasikan dua skema pembayaran:
-
-| Skema Pembayaran | Flow Penggunaan |
-| :---- | :---- |
-| **Opsi A: Bayar dengan Saldo (*Wallet*)** | Pelanggan dapat *Topup* Saldo terlebih dahulu (melalui VA). Saat *checkout*, saldo user\_balances akan langsung dipotong. |
-| **Opsi B: Bayar Langsung (Transfer VA)** | Saat *checkout* produk, sistem akan membuat kode **Virtual Account (VA) yang unik** yang terkait langsung dengan transaction\_id. |
-
-### 
-
-### **3\. Halaman Pembayaran Terpusat (*Dedicated Payment Page*)**
-
-Buat satu halaman/fitur untuk memproses konfirmasi pembayaran VA dari Opsi A (*Topup*) dan Opsi B (Pembelian Langsung).
-
-* **Flow:** Pengguna mengakses halaman Payment \-\> Masukkan Kode VA \-\> Sistem menampilkan detail (jumlah yang harus dibayar) \-\> Pengguna memasukkan nominal transfer (simulasi) \-\> Konfirmasi Pembayaran.  
-* Jika sukses, sistem akan:  
-  * **Untuk Topup:** Menambahkan saldo ke user\_balances.  
-  * **Untuk Pembelian:** Mengubah transactions.payment\_status menjadi paid **dan** menambahkan dana ke store\_balances penjual.
-
-## **Fitur yang Harus Diimplementasikan (Berdasarkan Halaman)**
-
-Implementasikan fungsionalitas CRUD untuk setiap peran:
-
-### **I. Halaman Pengguna (Customer Side)**
-
-| Halaman | Fungsionalitas Wajib |
-| :---- | :---- |
-| **Homepage** (/) | Menampilkan daftar **semua produk** yang tersedia. **Filter** berdasarkan product\_categories. |
-| **Halaman Produk** (/product/{slug}) | Menampilkan detail produk, semua product\_images, nama store, product\_reviews, dan tombol **"Beli"**. |
-| **Checkout** (/checkout) | Proses pengisian alamat, pemilihan *shipping* (shipping\_type, kalkulasi shipping\_cost), pemilihan Opsi Pembayaran (Saldo / Transfer VA). Membuat entri di transactions dan transaction\_details. |
-| **Riwayat Transaksi** (/history) | Melihat daftar transactions yang pernah dilakukan. Dapat melihat detail produk yang dibeli (transaction\_details). |
-| **Topup Saldo** (/wallet/topup) | Mengajukan *topup* saldo pribadi. Menghasilkan VA unik. |
-
-### 
-
-### **II. Halaman Toko (Seller Dashboard)**
-
-Halaman ini hanya dapat diakses oleh *Member* yang sudah mendaftar sebagai Toko.
-
-| Halaman | Fungsionalitas Wajib |
-| :---- | :---- |
-| **Pendaftaran Toko** (/store/register) | CRUD untuk membuat profil Toko (mengisi stores.name, logo, about, dll.). |
-| **Manajemen Toko** (/seller/profile) | CRUD untuk mengelola (update/delete) data Toko dan detail rekening bank. |
-| **Manajemen Kategori** (/seller/categories) | **CRUD** untuk product\_categories. |
-| **Manajemen Produk** (/seller/products) | **CRUD** untuk products dan product\_images (termasuk penKalianan is\_thumbnail). |
-| **Manajemen Pesanan** (/seller/orders) | Melihat daftar pesanan masuk (transactions). Mengubah status pesanan dan mengisi tracking\_number. |
-| **Saldo Toko** (/seller/balance) | Melihat saldo saat ini (store\_balances.balance) dan riwayat saldo (store\_balance\_histories). |
-| **Penarikan Dana** (/seller/withdrawals) | Mengajukan Penarikan dana (membuat entri di withdrawals) dan melihat riwayat withdrawals. |
-
-### 
-
-### **III. Halaman Admin (Admin Only)**
-
-Halaman ini hanya dapat diakses oleh pengguna dengan role: 'admin'.
-
-| Halaman | Fungsionalitas Wajib |
-| :---- | :---- |
-| **Verifikasi Toko** (/admin/verification) | Melihat daftar Toko yang belum terverifikasi (is\_verified: false). Fitur untuk **Memverifikasi** atau **Menolak** pendaftaran toko (mengubah stores.is\_verified). |
-| **Manajemen User & Store** (/admin/users) | Melihat dan mengelola daftar semua users dan stores yang terdaftar. |
-
-## **Penilaian**
-
-Persentase nilai dilakukan berdasarkan indikator berikut
-
-* Tampilan 15%  
-* Presentasi Projek 20% (jika nanti memungkinkan)  
-* Penerapan MVC \+ Efisiensi code 15%  
-* Kelengkapan Project sesuai kriteria 50%
-
-Penilaian akan dilakukan berdasarkan commit nya. Semakin banyak dan kompleks yang dilakukan per individu dalam kelompok, bobot nilai yang diberikan akan semakin besar dan berlaku sebaliknya.
-
-## **Informasi Tambahan**
-
-1. Silahkan fork repositori ini, lalu mulai kerjakan di laptop masing masing dan jangan lupa invite partner kelompok ke dalam repositori.  
-2. Berikan penjelasan aplikasi yang kalian buat sebagaimana readme pada repositori ini dan jangan lupa sertakan nama dan NIM anggota kelompok pada file [readme.md](http://readme.md)  
-3. Dipersilahkan membuat improvisasi pada codingan, library, dan sumber apapun yang dibutuhkan selama tidak merubah arsitektur aplikasi yang diberikan pada poin diatas.  
-4. Jika ada yang kurang dipahami dari perintah soal yang diberikan, feel free untuk menghubungi kami.
+**Pusat Kostum** adalah platform E-Commerce berbasis web yang menghubungkan penjual (maker/rental) kostum dengan pembeli. Aplikasi ini dirancang khusus untuk memfasilitasi transaksi jual beli kostum anime, superhero, pakaian adat, dan perlengkapan cosplay lainnya dengan sistem dompet digital (E-Wallet) terintegrasi.
 
 ---
-![alt text](<No Problem Running GIF by ProBit Global.gif>)
 
-Semangatt, badai pasti berlalu
+## 👨‍💻 Anggota Kelompok
+
+-   **Nama:** Achmad Rafli Delly Wahyudi
+-   **NIM:** 225150607111006
+
+---
+
+## 🚀 Fitur Utama
+
+Aplikasi ini memiliki 3 role pengguna dengan fungsionalitas yang berbeda:
+
+### 1. Fitur Pembeli (Member)
+
+-   **Katalog Produk:** Mencari dan melihat detail produk dengan galeri foto interaktif.
+-   **E-Wallet:** Top-up saldo, belanja menggunakan saldo dompet, dan riwayat transaksi dompet.
+-   **Checkout & Pembayaran:** Mendukung pembayaran via Saldo Dompet (Otomatis) dan Virtual Account (Simulasi).
+-   **Riwayat Belanja:** Melihat status pesanan (Menunggu Bayar, Diproses, Dikirim, Selesai).
+-   **Buka Toko:** Member dapat mendaftar sebagai penjual (Seller).
+
+### 2. Fitur Penjual (Seller)
+
+-   **Registrasi Toko:** Mengajukan pembukaan toko dengan upload logo dan data lengkap (Menunggu verifikasi Admin).
+-   **Dashboard Seller:** Ringkasan pendapatan, pesanan baru, dan total produk.
+-   **Manajemen Produk:** CRUD Produk (Tambah, Edit, Hapus) dengan dukungan **Multiple Images** dan penentuan Thumbnail.
+-   **Manajemen Pesanan:** Update status pesanan (Diproses, Dikirim, Selesai) dan input Nomor Resi.
+-   **Dompet Toko:** Melihat saldo aktif hasil penjualan dan riwayat mutasi (Pemasukan/Penarikan).
+-   **Penarikan Dana (Withdrawal):** Mengajukan pencairan dana ke rekening bank (Validasi saldo real-time).
+
+### 3. Fitur Admin
+
+-   **Dashboard Admin:** Statistik total user, toko, dan transaksi.
+-   **Verifikasi Toko:** Menerima atau menolak pengajuan buka toko dari member.
+-   **Manajemen User:** Melihat daftar pengguna dan menghapus user bermasalah.
+-   **Manajemen Penarikan:** Memvalidasi dan menyetujui permintaan penarikan dana dari penjual (Transfer manual & Approve system).
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+-   **Framework Backend:** Laravel 12
+-   **Frontend:** Blade Templates
+-   **Styling:** Tailwind CSS
+-   **Interaktivitas:** Alpine.js (untuk Modal, Dropdown, Preview Image, Alert)
+-   **Database:** MySQL
+
+---
+
+## ⚙️ Cara Instalasi & Menjalankan
+
+Ikuti langkah-langkah berikut untuk menjalankan proyek di komputer lokal:
+
+1.  **Clone Repositori**
+
+    ```bash
+    git clone https://github.com/rafli967/Achmad-Rafli-Delly-Wahyudi_PEMWEB.git .
+    cd nama_direktori
+    ```
+
+2.  **Install Dependensi PHP & JS**
+
+    ```bash
+    composer install
+    npm install
+    ```
+
+3.  **Konfigurasi Environment**
+
+    -   Duplikat file `.env.example` menjadi `.env`.
+    -   Atur koneksi database di file `.env`:
+
+    ```env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=nama_database_anda
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
+
+4.  **Generate Key**
+
+    ```bash
+    php artisan key:generate
+    ```
+
+5.  **Migrasi Database & Seeder (PENTING)**
+    Perintah ini akan membuat tabel dan mengisi data dummy (Admin, Toko, Produk, Kategori).
+
+    ```bash
+    php artisan migrate:fresh --seed
+    ```
+
+    _Pastikan file gambar placeholder sudah ada di `public/assets/images/placeholder.png` dan `public/hero.png`._
+
+6.  **Hubungkan Storage Gambar**
+    Agar gambar produk dan logo toko bisa tampil.
+
+    ```bash
+    php artisan storage:link
+    ```
+
+7.  **Jalankan Aplikasi**
+    Buka dua terminal berbeda:
+    -   Terminal 1 (Backend):
+        ```bash
+        php artisan serve
+        ```
+    -   Terminal 2 (Frontend Build):
+        ```bash
+        npm run dev
+        ```
+
+---
+
+## 🔑 Akun Demo (Seeder)
+
+Gunakan akun berikut untuk pengujian:
+
+| Role       | Email                | Password   | Keterangan                          |
+| :--------- | :------------------- | :--------- | :---------------------------------- |
+| **Admin**  | `admin@example.com`  | `password` | Akses penuh verifikasi & withdrawal |
+| **Seller** | `seller@example.com` | `password` | Pemilik toko "Cosplay Universe"     |
+| **Buyer**  | `buyer@example.com`  | `password` | Pembeli saldo 0 (bisa topup)        |
+
+---
+
+## 📸 Struktur Folder Penting
+
+-   `app/Http/Controllers/Seller` - Logika khusus Penjual (Produk, Order, Saldo).
+-   `app/Http/Controllers/AdminController.php` - Logika Admin.
+-   `resources/views/layouts` - Layout utama (`frontend`, `seller`, `admin`).
+-   `database/seeders` - Data dummy untuk testing.
+
+---
+
+Copyright © 2025 Achmad Rafli Delly Wahyudi. All Rights Reserved.

@@ -10,7 +10,6 @@ class StoreSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ambil user yang akan jadi seller
         $seller = User::where('email', 'seller@example.com')->first();
 
         if ($seller) {
