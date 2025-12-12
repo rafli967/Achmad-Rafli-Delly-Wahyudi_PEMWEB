@@ -53,12 +53,25 @@
                 <div class="p-6">
                     @foreach($trx->transactionDetails as $detail)
                     <div class="flex gap-4 mb-4 last:mb-0">
-                        <div class="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
-                             <img src="https://via.placeholder.com/150?text=IMG" class="w-full h-full object-cover">
+                        
+                        <div class="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
+                             @php
+                                // Coba ambil thumbnail, jika tidak ada ambil gambar pertama
+                                $image = $detail->product->thumbnail ?? $detail->product->productImages->first();
+                             @endphp
+
+                             @if($image)
+                                <img src="{{ asset('storage/' . $image->image) }}" alt="{{ $detail->product->name }}" class="w-full h-full object-cover">
+                             @else
+                                <img src="https://via.placeholder.com/150?text={{ urlencode(substr($detail->product->name, 0, 3)) }}" class="w-full h-full object-cover opacity-50">
+                             @endif
                         </div>
+                        
                         <div class="flex-1">
                             <h4 class="font-bold text-gray-900 text-sm line-clamp-1">{{ $detail->product->name }}</h4>
-                            <p class="text-xs text-gray-500">{{ $detail->qty }} barang x Rp {{ number_format($detail->product->price, 0, ',', '.') }}</p>
+                            <p class="text-xs text-gray-500">
+                                {{ $detail->qty }} barang x Rp {{ number_format($detail->subtotal / $detail->qty, 0, ',', '.') }}
+                            </p>
                         </div>
                         <div class="text-right">
                             <div class="font-medium text-gray-900 text-sm">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</div>
@@ -75,11 +88,11 @@
                     
                     <div>
                         @if($trx->payment_status == 'unpaid')
-                            <a href="{{ route('payment.show', $trx->id) }}" class="inline-block bg-orange-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-orange-600 transition text-sm">
+                            <a href="{{ route('payment.show', $trx->id) }}" class="inline-block bg-orange-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-orange-600 transition text-sm shadow-sm">
                                 Bayar Sekarang
                             </a>
                         @else
-                            <a href="{{ route('checkout.success', $trx->id) }}" class="inline-block border border-gray-300 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition text-sm">
+                            <a href="{{ route('checkout.success', $trx->id) }}" class="inline-block border border-gray-300 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition text-sm bg-white">
                                 Lihat Invoice
                             </a>
                         @endif

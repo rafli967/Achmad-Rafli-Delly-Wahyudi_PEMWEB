@@ -78,8 +78,7 @@
                                     <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600">Admin Dashboard</a>
                                 @endif
                                 
-                                {{-- PERBAIKAN DI SINI --}}
-                                {{-- Cek apakah user punya toko (Verified ataupun belum) --}}
+                                
                                 @if(Auth::user()->store)
                                     <a href="{{ route('seller.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600">
                                         Toko Saya
@@ -89,14 +88,13 @@
                                         Buka Toko Gratis
                                     </a>
                                 @endif
-                                {{-- AKHIR PERBAIKAN --}}
 
                                 <div class="border-t border-gray-100 my-1"></div>
 
-                                <a href="{{ route('history') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600 flex justify-between items-center">
+                                <a href="{{ route('history') }}" class=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600 flex justify-between items-center">
                                     Riwayat Belanja
                                 </a>
-                                <a href="{{ route('wallet.topup') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600 flex justify-between items-center">
+                                <a href="{{ route('wallet.topup') }}" class=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600 flex justify-between items-center">
                                     Topup Saldo
                                     <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">+</span>
                                 </a>

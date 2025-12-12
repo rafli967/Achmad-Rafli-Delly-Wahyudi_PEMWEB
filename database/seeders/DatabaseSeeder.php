@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // ==========================================
-        // 1. Buat 1 User dengan role 'admin'
-        // ==========================================
+        
+        
+        
         User::factory()->create([
             'name' => 'Admin Kostum',
             'email' => 'admin@example.com',
@@ -28,10 +28,10 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // ==========================================
-        // 2. Buat 2 User dengan role 'member'
-        // ==========================================
-        // Member 1 (Pemilik Toko Kostum)
+        
+        
+        
+        
         $member1 = User::factory()->create([
             'name' => 'Sultan Cosplay',
             'email' => 'seller@example.com',
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Member 2 (Pembeli)
+        
         User::factory()->create([
             'name' => 'Wibu Lovers',
             'email' => 'buyer@example.com',
@@ -49,25 +49,25 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // ==========================================
-        // 3. Buat 1 Toko (Store) Spesialis Kostum
-        // ==========================================
+        
+        
+        
         $store = Store::create([
             'user_id' => $member1->id,
             'name' => 'Fantasy Costume Warehouse',
             'logo' => 'stores/costume-logo.png',
             'about' => 'Penyedia kostum terlengkap untuk Cosplay, Halloween, dan Pentas Seni. Kualitas import harga lokal.',
             'phone' => '081299887766',
-            'address_id' => '153', // ID Kota Dummy
+            'address_id' => '153', 
             'city' => 'Jakarta Selatan',
             'address' => 'Jl. Fatmawati Raya No. 10, Cilandak',
             'postal_code' => '12430',
             'is_verified' => true,
         ]);
 
-        // ==========================================
-        // 4. Buat 5 Kategori Produk Kostum
-        // ==========================================
+        
+        
+        
         $categories = [];
         $categoryData = [
             'Anime & Cosplay' => 'Karakter anime populer Jepang.',
@@ -87,10 +87,10 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // ==========================================
-        // 5. Buat 10 Produk Kostum
-        // ==========================================
-        // Daftar nama produk yang spesifik agar terlihat real
+        
+        
+        
+        
         $costumeNames = [
             'Kostum Spider-Man Homecoming (Full Set)',
             'Seragam Attack on Titan Survey Corps',
@@ -105,7 +105,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($costumeNames as $index => $productName) {
-            // Kita rotasi kategori agar tersebar merata
+            
             $categoryIndex = $index % count($categories); 
             $selectedCategory = $categories[$categoryIndex];
 
@@ -115,9 +115,9 @@ class DatabaseSeeder extends Seeder
                 'name' => $productName,
                 'slug' => Str::slug($productName) . '-' . Str::random(5),
                 'description' => "Deskripsi lengkap untuk {$productName}. Bahan berkualitas, nyaman dipakai, dan detail sangat mirip dengan aslinya. Cocok untuk event, pesta, atau koleksi pribadi.",
-                'condition' => $index > 7 ? 'second' : 'new', // Produk ke 8-10 bekas (preloved)
-                'price' => rand(150000, 3500000), // Harga 150rb - 3.5jt
-                'weight' => rand(500, 2000), // Berat 500gr - 2kg
+                'condition' => $index > 7 ? 'second' : 'new', 
+                'price' => rand(150000, 3500000), 
+                'weight' => rand(500, 2000), 
                 'stock' => rand(1, 20),
             ]);
         }

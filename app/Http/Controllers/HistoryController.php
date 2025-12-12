@@ -10,9 +10,9 @@ class HistoryController extends Controller
 {
     public function index()
     {
-        // Ambil transaksi milik user yang sedang login (sebagai buyer)
+        
         $transactions = Transaction::where('buyer_id', Auth::id())
-                        ->with(['store', 'transactionDetails.product']) // Eager load relasi
+                        ->with(['store', 'transactionDetails.product']) 
                         ->latest()
                         ->get();
 

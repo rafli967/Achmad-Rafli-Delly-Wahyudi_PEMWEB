@@ -36,7 +36,7 @@
                 <span class="font-bold">Instruksi:</span> Salin <strong>Kode Virtual Account</strong> di atas, lalu lakukan pembayaran melalui ATM, Mobile Banking, atau gunakan <strong>Simulator Pembayaran</strong> di bawah ini (Khusus Testing).
             </div>
 
-            <a href="{{ route('payment.gate') }}" onclick="copyToClipboard('{{ $transaction->code }}')" class="block w-full bg-indigo-600 text-white text-center font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition shadow-lg flex items-center justify-center gap-2">
+            <a href="{{ route('payment.gate') }}" onclick="copyToClipboard('{{ $transaction->code }}')" class=" w-full bg-indigo-600 text-white text-center font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition shadow-lg flex items-center justify-center gap-2">
                 <span>Bayar Sekarang (Simulator)</span>
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
             </a>
@@ -49,10 +49,10 @@
 </div>
 
 <script>
-    // Fitur Copy otomatis saat klik tombol bayar (opsional, untuk mempermudah)
+    
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text);
-        // Kita tidak alert agar user langsung pindah halaman, tapi kode sudah di clipboard
+        
     }
 </script>
 @endsection

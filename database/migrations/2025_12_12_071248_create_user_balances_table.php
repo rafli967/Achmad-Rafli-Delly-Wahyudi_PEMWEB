@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('user_balances', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-        $table->decimal('balance', 15, 2)->default(0); // Saldo dompet
+        $table->decimal('balance', 15, 2)->default(0);
         $table->timestamps();
     });
 }

@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('topups', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-        $table->string('unique_code', 20)->unique(); // Kode VA unik
+        $table->string('unique_code', 20)->unique();
         $table->decimal('amount', 15, 2);
         $table->enum('status', ['pending', 'success', 'failed', 'cancelled'])->default('pending');
         $table->timestamps();

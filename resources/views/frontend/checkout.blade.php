@@ -195,13 +195,13 @@
         }
     }
 
-    // Tambahan: Logika Submit agar user tahu proses sedang berjalan
+    
     const form = document.getElementById('checkoutForm');
     const btn = document.getElementById('payButton');
 
     form.addEventListener('submit', function(e) {
-        // Cek validasi HTML5 manual jika perlu, tapi 'required' di input sudah cukup
-        // Ubah teks tombol
+        
+        
         btn.innerHTML = `
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -209,7 +209,7 @@
             </svg>
             Memproses...
         `;
-        btn.disabled = true; // Cegah double submit
+        btn.disabled = true;
     });
 
     document.addEventListener('DOMContentLoaded', () => recalculate());

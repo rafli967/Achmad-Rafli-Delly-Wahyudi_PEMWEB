@@ -4,7 +4,7 @@ namespace App\Models;
 use App\Models\UserBalance;
 use App\Models\Topup;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -50,7 +50,7 @@ class User extends Authenticatable
         ];
     }
 
-    // Helper methods
+    
     public function isAdmin()
     {
         return $this->role === 'admin';
@@ -61,12 +61,12 @@ class User extends Authenticatable
         return $this->role === 'member';
     }
     
-    // Cek apakah user adalah seller (punya store yang verified)
+    
     public function isSeller()
     {
         return $this->store()->exists() && $this->store->is_verified;
     }
-    // relationships can hava one store 
+    
     public function store()
     {
         return $this->hasOne(Store::class);

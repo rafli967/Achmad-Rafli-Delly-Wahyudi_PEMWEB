@@ -31,10 +31,8 @@
             <tr class="hover:bg-gray-50 transition">
                 <td class="px-6 py-4">
                     <div class="flex items-center gap-3">
-                        @php $thumb = $product->productImages->first(); @endphp
-                        
-                        @if($thumb && $thumb->image)
-                            <img src="{{ asset('storage/' . $thumb->image) }}" class="w-12 h-12 rounded bg-gray-100 object-cover border">
+                        @if($product->thumbnail)
+                            <img src="{{ asset('storage/' . $product->thumbnail->image) }}" class="w-12 h-12 rounded bg-gray-100 object-cover border">
                         @else
                             <div class="w-12 h-12 rounded bg-gray-100 border flex items-center justify-center text-xs text-gray-400">No img</div>
                         @endif

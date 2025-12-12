@@ -32,11 +32,6 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class);
     }
 
-    public function productImages()
-    {
-        return $this->hasMany(ProductImage::class);
-    }
-
     public function transactionDetails()
     {
         return $this->hasMany(TransactionDetail::class);
@@ -44,5 +39,16 @@ class Product extends Model
     public function productReviews()
     {
         return $this->hasMany(ProductReview::class);
+    }
+
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+    
+    public function thumbnail()
+    {
+        return $this->hasOne(ProductImage::class)->where('is_thumbnail', true);
     }
 }

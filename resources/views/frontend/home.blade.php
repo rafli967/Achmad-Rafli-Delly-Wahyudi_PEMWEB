@@ -2,8 +2,12 @@
 
 @section('content')
 
-<div class="bg-indigo-600 text-white">
-    <div class="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+<div class="relative bg-cover bg-center text-white h-[400px]" style="background-image: url('{{ asset('assets/images/hero.jpg') }}');">
+    
+    <div class="absolute inset-0 bg-black/80 opacity-80"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+        
         <div class="md:w-1/2 mb-8 md:mb-0">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
                 Temukan Kostum <br> Impianmu Disini!
@@ -14,9 +18,6 @@
             <a href="#products" class="bg-white text-indigo-600 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition">
                 Belanja Sekarang
             </a>
-        </div>
-        <div class="md:w-1/3">
-            <img src="https://cdn-icons-png.flaticon.com/512/3405/3405862.png" alt="Cosplay" class="w-full drop-shadow-2xl opacity-90 animate-bounce-slow">
         </div>
     </div>
 </div>
@@ -49,16 +50,15 @@
             <a href="{{ route('product.detail', $product->slug) }}">
                 
                 <div class="relative h-48 bg-gray-200 overflow-hidden">
-                    {{-- LOGIKA GAMBAR PRODUK --}}
-                    @php
-                        // Ambil gambar pertama dari relasi productImages
-                        $firstImage = $product->productImages->first();
-                    @endphp
-
-                    @if($firstImage && $firstImage->image)
-                        <img src="{{ asset('storage/' . $firstImage->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    @if($product->thumbnail)
+                        <img src="{{ asset('storage/' . $product->thumbnail->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     @else
-                        <img src="https://via.placeholder.com/300x300?text={{ urlencode($product->name) }}" alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        @php $firstImg = $product->productImages->first(); @endphp
+                        @if($firstImg)
+                            <img src="{{ asset('storage/' . $firstImg->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        @else
+                            <img src="https://via.placeholder.com/300x300?text={{ urlencode($product->name) }}" class="w-full h-full object-cover">
+                        @endif
                     @endif
                     
                     @if($product->condition === 'second')

@@ -12,20 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            
-            $table->enum('payment_method', ['balance', 'va'])->default('balance')->after('grand_total');
-            
-            $table->string('payment_va_code', 20)->nullable()->after('payment_method');
+            $table->enum('delivery_status', ['pending', 'processing', 'shipped', 'completed', 'cancelled'])
+                ->default('pending')
+                ->after('payment_status');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn(['payment_method', 'payment_va_code']);
+            $table->dropColumn('delivery_status');
         });
     }
 };

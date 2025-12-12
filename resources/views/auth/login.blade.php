@@ -11,7 +11,7 @@
     <div class="min-h-screen flex">
         
         <div class="hidden lg:flex lg:w-1/2 bg-indigo-900 relative justify-center items-center overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1593085512500-bfd179323b26?q=80&w=2070&auto=format&fit=crop" 
+            <img src="https://images.unsplash.com/photo-1531300185372-b7cbe2eddf0b?q=80&w=1974&auto=format&fit=crop" 
                  alt="Cosplay Costume" 
                  class="absolute inset-0 w-full h-full object-cover opacity-60">
             
@@ -22,11 +22,11 @@
                 </p>
             </div>
             
-            <div class="absolute bottom-0 left-0 transform translate-y-1/2 -translate-x-1/2">
+            {{-- <div class="absolute bottom-0 left-0 transform translate-y-1/2 -translate-x-1/2">
                 <svg width="400" height="400" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#4F46E5" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.9C87.4,-34.7,90.1,-20.4,85.8,-8.3C81.5,3.8,70.2,13.7,60.9,23.5C51.6,33.2,44.3,42.8,35.2,50.6C26.1,58.4,15.2,64.4,3.2,67.8C-8.8,71.2,-21.9,72,-33.4,66.8C-44.9,61.6,-54.8,50.4,-63.3,38.1C-71.8,25.8,-78.9,12.4,-78.3,0.3C-77.7,-11.8,-69.4,-22.6,-59.6,-32.1C-49.8,-41.6,-38.5,-49.8,-26.8,-58.3C-15.1,-66.8,-3,-75.6,10.2,-78.9C23.4,-82.2,46.8,-80,44.7,-76.4Z" transform="translate(100 100)" />
                 </svg>
-            </div>
+            </div> --}}
         </div>
 
         <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-white">

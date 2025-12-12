@@ -15,7 +15,7 @@
 
     <div class="bg-white rounded-xl shadow-sm p-6 grid grid-cols-1 md:grid-cols-12 gap-8">
         
-        <div class="md:col-span-5" x-data="{ activeImage: '{{ $product->productImages->first() ? asset('storage/'.$product->productImages->first()->image) : 'https://via.placeholder.com/600' }}' }">
+        <div class="md:col-span-5" x-data="{ activeImage: '{{ $product->thumbnail ? asset('storage/'.$product->thumbnail->image) : ($product->productImages->first() ? asset('storage/'.$product->productImages->first()->image) : 'https://via.placeholder.com/600') }}' }">
     
             <div class="aspect-square rounded-xl overflow-hidden border bg-gray-100 mb-4 relative group">
                 <img :src="activeImage" class="w-full h-full object-cover transition duration-300">

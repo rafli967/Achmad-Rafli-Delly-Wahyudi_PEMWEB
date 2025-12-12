@@ -10,10 +10,10 @@ class FrontendController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil kategori untuk filter/menu
+        
         $categories = ProductCategory::all();
 
-        // Ambil produk, bisa difilter nanti
+        
         $products = Product::with(['store', 'productCategory'])
                     ->latest()
                     ->paginate(12);
@@ -27,7 +27,7 @@ class FrontendController extends Controller
                     ->with(['store', 'productCategory', 'productImages', 'productReviews'])
                     ->firstOrFail();
         
-        // Produk terkait (simple logic: kategori sama)
+        
         $relatedProducts = Product::where('product_category_id', $product->product_category_id)
                             ->where('id', '!=', $product->id)
                             ->take(4)

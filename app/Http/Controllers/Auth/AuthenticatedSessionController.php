@@ -27,9 +27,6 @@ class AuthenticatedSessionController extends Controller
     $request->authenticate();
 
     $request->session()->regenerate();
-
-    // UBAH DARI: route('dashboard', absolute: false)
-    // MENJADI:   route('home', absolute: false)
     
     return redirect()->intended(route('home', absolute: false));
 }

@@ -14,26 +14,22 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // 1. Tampilkan Semua Produk
     public function index()
     {
-        // Ambil produk HANYA milik toko yang sedang login
         $products = Product::where('store_id', Auth::user()->store->id)
-                    ->with(['productCategory', 'productImages'])
+                    ->with(['productCategory', 'thumbnail']) 
                     ->latest()
                     ->paginate(10);
 
         return view('seller.products.index', compact('products'));
     }
 
-    // 2. Form Tambah Produk
     public function create()
     {
         $categories = ProductCategory::all();
         return view('seller.products.create', compact('categories'));
     }
 
-    // 3. Simpan Produk Baru
     public function store(Request $request)
     {
         $request->validate([
@@ -44,8 +40,8 @@ class ProductController extends Controller
             'weight' => 'required|integer|min:1',
             'condition' => 'required|in:new,second',
             'description' => 'required|string',
-            'images' => 'required|array|min:1|max:5', // Wajib array, min 1, max 5
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048', // Validasi tiap file
+            'images' => 'required|array|min:1|max:5', 
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         DB::beginTransaction();
@@ -62,7 +58,7 @@ class ProductController extends Controller
                 'description' => $request->description,
             ]);
 
-            // Loop untuk menyimpan multiple images
+            
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $index => $file) {
                     $path = $file->store('products', 'public');
@@ -70,7 +66,7 @@ class ProductController extends Controller
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image' => $path,
-                        'is_thumbnail' => $index === 0, // Gambar pertama jadi thumbnail
+                        'is_thumbnail' => $index === 0, 
                     ]);
                 }
             }
@@ -80,20 +76,17 @@ class ProductController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->withErrors(['error' => 'Gagal menyimpan: ' . $e->getMessage()]);
+            return back()->withInput()->withErrors(['error' => 'Gagal: ' . $e->getMessage()]);
         }
     }
 
-    // 4. Form Edit Produk
     public function edit(Product $product)
     {
         if ($product->store_id !== Auth::user()->store->id) abort(403);
-
         $categories = ProductCategory::all();
         return view('seller.products.edit', compact('product', 'categories'));
     }
 
-    // 5. Update Produk
     public function update(Request $request, Product $product)
     {
         if ($product->store_id !== Auth::user()->store->id) abort(403);
@@ -106,7 +99,7 @@ class ProductController extends Controller
             'weight' => 'required|integer',
             'condition' => 'required|in:new,second',
             'description' => 'required|string',
-            'images' => 'nullable|array|max:5', // Opsional saat update
+            'images' => 'nullable|array|max:5',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -123,24 +116,18 @@ class ProductController extends Controller
                 'description' => $request->description,
             ]);
 
-            // Jika ada upload gambar baru, HAPUS yang lama & GANTI baru
             if ($request->hasFile('images')) {
-                // Hapus fisik file lama (Opsional, recommended)
-                /* foreach($product->productImages as $oldImg) {
-                    Storage::disk('public')->delete($oldImg->image);
-                } */
                 
-                // Hapus record lama
                 ProductImage::where('product_id', $product->id)->delete();
 
-                // Simpan baru
+                
                 foreach ($request->file('images') as $index => $file) {
                     $path = $file->store('products', 'public');
                     
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image' => $path,
-                        'is_thumbnail' => $index === 0,
+                        'is_thumbnail' => $index === 0, 
                     ]);
                 }
             }
@@ -150,16 +137,14 @@ class ProductController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->withErrors(['error' => 'Gagal update: ' . $e->getMessage()]);
+            return back()->withInput()->withErrors(['error' => 'Gagal: ' . $e->getMessage()]);
         }
     }
 
-    // 6. Hapus Produk
     public function destroy(Product $product)
     {
         if ($product->store_id !== Auth::user()->store->id) abort(403);
-        
         $product->delete();
-        return redirect()->route('seller.products.index')->with('success', 'Produk berhasil dihapus.');
+        return redirect()->route('seller.products.index')->with('success', 'Produk dihapus.');
     }
 }

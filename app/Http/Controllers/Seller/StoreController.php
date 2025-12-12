@@ -10,10 +10,10 @@ use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
-    // Menampilkan Form Pendaftaran Toko
+    
     public function create()
     {
-        // Cek apakah user sudah punya toko? Jika ya, lempar ke dashboard
+        
         if (Auth::user()->store) {
             return redirect()->route('seller.dashboard');
         }
@@ -21,7 +21,7 @@ class StoreController extends Controller
         return view('seller.register');
     }
 
-    // Memproses Pendaftaran Toko
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -31,47 +31,68 @@ class StoreController extends Controller
             'address' => 'required|string',
             'postal_code' => 'required|numeric',
             'about' => 'required|string|max:1000',
-            'logo' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
+            'logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Upload Logo
         $logoPath = null;
         if ($request->hasFile('logo')) {
-            // Simpan ke storage/app/public/stores
             $logoPath = $request->file('logo')->store('stores', 'public');
         }
 
-        // Buat Data Toko
         Store::create([
             'user_id' => Auth::id(),
             'name' => $request->name,
             'logo' => $logoPath,
             'about' => $request->about,
             'phone' => $request->phone,
-            'address_id' => '0', // Placeholder (jika pakai API RajaOngkir nanti)
+            'address_id' => '0',
             'city' => $request->city,
             'address' => $request->address,
             'postal_code' => $request->postal_code,
-            'is_verified' => false, // Default belum verifikasi admin
+            'is_verified' => false, 
         ]);
 
-        return redirect()->route('seller.dashboard')->with('success', 'Toko berhasil dibuat!');
+        
+        return redirect()->route('store.pending');
     }
 
-    // Halaman Utama Dashboard Seller
-    public function dashboard()
+    public function pending()
     {
         $store = Auth::user()->store;
+
         
-        // Pastikan punya toko
         if (!$store) {
             return redirect()->route('store.register');
         }
 
+        
+        if ($store->is_verified) {
+            return redirect()->route('seller.dashboard');
+        }
+
+        return view('seller.pending');
+    }
+
+    
+    public function dashboard()
+    {
+        $store = Auth::user()->store;
+        
+        
+        if (!$store) {
+            return redirect()->route('store.register');
+        }
+
+        
+        if (!$store->is_verified) {
+            return redirect()->route('store.pending');
+        }
+
+        
         return view('seller.dashboard', compact('store'));
     }
 
-    // Form Edit Profil Toko
+    
     public function editProfile()
     {
         $store = Auth::user()->store;
@@ -94,10 +115,10 @@ class StoreController extends Controller
 
         $data = $request->except('logo');
 
-        // Handle Upload Logo Baru
+        
         if ($request->hasFile('logo')) {
-            // Hapus logo lama jika bukan default (opsional)
-            // if ($store->logo && Storage::exists($store->logo)) Storage::delete($store->logo);
+            
+            
             
             $data['logo'] = $request->file('logo')->store('stores', 'public');
         }
